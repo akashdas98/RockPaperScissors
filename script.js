@@ -4,13 +4,8 @@ const score = document.querySelectorAll('.score div');
 
 const buttons = document.querySelectorAll('.buttons button');
 
-function selectButton(button) {
-    button.addEventListener('click', playerButton);
-    button.addEventListener('click', game);
-}
-
 let playerSelection;
-function playerButton(e) {
+function playerButton() {
     playerSelection = this.className;
     const playerImg = document.querySelector('.game .player');
     if(playerSelection == 'rock') {
@@ -55,6 +50,42 @@ function playRound(computerSelection, playerSelection) {
     }
 }
 
+function disableButton() {
+    buttons.forEach(button => {
+        button.removeEventListener('click', playerButton);
+        button.removeEventListener('click', game);
+    });
+}
+
+function reset(e) {
+    if(score1 == 5 || score2 == 5) {
+        e.target.textContent = 'Playing'
+        score1 = 0;
+        score2 = 0;
+        score.forEach(scoreDiv => scoreDiv.textContent = '0');
+        enableButton();
+        e.target.removeEventListener('click', reset);
+    }
+}
+
+function restart() {
+    disableButton();
+    const button = document.querySelector('.game button');
+    button.addEventListener('click', reset);
+}
+
+function decideWinner() {
+    const button = document.querySelector('.game button');
+    if(score1 == 5) {
+        button.textContent = 'You win!!';
+        restart();
+    }
+    if(score2 == 5) {
+        button.textContent = 'You lose!';
+        restart();
+    }
+}
+
 function game() {
     let result = playRound(computerPlay(), playerSelection)
     if(result == 1) {
@@ -69,36 +100,16 @@ function game() {
     }
 }
 
-function decideWinner() {
-    const button = document.querySelector('.game button');
-    if(score1 == 5) {
-        button.textContent = 'You win!!';
-        reset();
-    }
-    if(score2 == 5) {
-        button.textContent = 'You lose!';
-        reset();
-    }
+function enableButton() {
+    buttons.forEach(button => {
+        button.addEventListener('click', playerButton);
+        button.addEventListener('click', game);
+    });
 }
 
-function disableButton(button) {
-    button.removeEventListener('click', playerButton);
-    button.removeEventListener('click', game);
-}
+enableButton();
 
-function reset() {
-    buttons.forEach(disableButton);
-    const button = document.querySelector('.game button');
-    button.addEventListener('click', gameStart);
-}
 
-function gameStart() {
-    score1 = 0;
-    score2 = 0;
-    this.textContent = 'Playing';
-    score.forEach(scoreDiv => scoreDiv.textContent = '0');
-    buttons.forEach(selectButton);
-    this.removeEventListener('click', gameStart);
-} 
 
-gameStart();
+
+    
