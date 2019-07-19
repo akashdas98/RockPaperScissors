@@ -58,14 +58,13 @@ function disableButton() {
 }
 
 function reset(e) {
-    if(score1 == 5 || score2 == 5) {
-        e.target.textContent = 'Playing'
-        score1 = 0;
-        score2 = 0;
-        score.forEach(scoreDiv => scoreDiv.textContent = '0');
-        enableButton();
-        e.target.removeEventListener('click', reset);
-    }
+    this.childNodes[0].textContent = 'Playing';
+    this.removeChild(this.childNodes[1]);
+    score1 = 0;
+    score2 = 0;
+    score.forEach(scoreDiv => scoreDiv.textContent = '0');
+    enableButton();
+    this.removeEventListener('click', reset);
 }
 
 function restart() {
@@ -76,12 +75,16 @@ function restart() {
 
 function decideWinner() {
     const button = document.querySelector('.game button');
+    const h2 = document.createElement('h2');
+    h2.textContent = 'Restart'
     if(score1 == 5) {
-        button.textContent = 'You win!!';
+        button.childNodes[0].textContent = 'You Win!'
+        button.appendChild(h2);
         restart();
     }
     if(score2 == 5) {
-        button.textContent = 'You lose!';
+        button.childNodes[0].textContent = 'You Lose!'
+        button.appendChild(h2);
         restart();
     }
 }
